@@ -1,0 +1,9 @@
+rm /u01/app/oracle/oradata/dbconfig/XE/listener.ora
+rm /u01/app/oracle/oradata/dbconfig/XE/oracle-xe
+rm /u01/app/oracle/oradata/dbconfig/XE/orapwXE
+rm /u01/app/oracle/oradata/dbconfig/XE/spfileXE.ora
+rm /u01/app/oracle/oradata/dbconfig/XE/tnsnames.ora
+rm $ORACLE_HOME/dbs/orapwXE
+rm $ORACLE_HOME/dbs/spfileXE.ora
+rm /u01/app/oracle/product/11.2.0/xe/network/admin/listener.ora
+rm /u01/app/oracle/product/11.2.0/xe/network/admin/tnsnames.ora

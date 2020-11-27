@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Springbootwebsocket - Romines Note</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../../css/extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Springbootwebsocket";
+    var mkdocs_page_input_path = "websocket\\springbootwebsocket.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Romines Note</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Java Note</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../javascript/">JS Note</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../dll/">Windows Command Line</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../nginx/">nginx</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../read/">readme</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Romines Note</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+    <ul class="wy-breadcrumbs">
+        <li><a onclick="window.history.back()">&laquo; Back</a></li>
+        <li style="float:right"><a onclick="window.history.forward()">Forward &raquo;</a></li>
+    </ul>
+    <hr />
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="bean">Bean</h2>
+<pre><code>@Configuration
+public class WebsocketAutoConfig {
+
+    @Bean
+    public ServerEndpointExporter endpointExporter(){
+        return new ServerEndpointExporter();
+    }
+}
+</code></pre>
+
+<hr />
+<h2 id="server-endpoint">Server Endpoint</h2>
+<pre><code>import org.springframework.stereotype.Component;
+
+import javax.websocket.*;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+@Component
+@ServerEndpoint(&quot;/message/{id}&quot;)
+public class WebsocketServerEndpoint{
+
+    private String id;
+
+    private Session session;
+
+    public static void sendMessage(String id,String message) throws NullPointerException,IOException {
+        WebSocketServerEndpointSet.getById(id).send(message);
+    }
+
+    @OnOpen
+    public void onOpen(Session session, @PathParam(&quot;id&quot;) String id){
+        this.id = id;
+        this.session = session;
+        WebSocketServerEndpointSet.add(this);
+    }
+
+    @OnClose
+    public void onClose(){
+        WebSocketServerEndpointSet.remove(this);
+    }
+
+    @OnMessage
+    public void onMessage(String message){
+        System.out.println(message);
+    }
+
+    @OnError
+    public void onError(Throwable e){
+        e.printStackTrace();
+    }
+
+    private void send(String message) throws IOException {
+        this.session.getBasicRemote().sendText(message);
+    }
+
+    public boolean equals(String id){
+        if(this.id.equals(id)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+class WebSocketServerEndpointSet{
+
+    private WebSocketServerEndpointSet(){
+        this.endpoints = new HashSet&lt;&gt;();
+    }
+
+    private static WebSocketServerEndpointSet endpointSet;
+
+    private static void construct(){
+        if(endpointSet == null){
+            endpointSet = new WebSocketServerEndpointSet();
+        }
+    }
+
+    public static void add(WebsocketServerEndpoint endpoint){
+        construct();
+        endpointSet.endpoints.add(endpoint);
+    }
+
+    public static void remove(WebsocketServerEndpoint endpoint){
+        construct();
+        endpointSet.endpoints.remove(endpoint);
+    }
+
+    public static int size(){
+        construct();
+        return endpointSet.endpoints.size();
+    }
+
+    public static WebsocketServerEndpoint getById(String id) throws NullPointerException{
+        construct();
+        for( WebsocketServerEndpoint item : endpointSet.endpoints ){
+            if(item.equals(id)){
+                return item;
+            }
+        }
+        throw new NullPointerException(&quot;该连接不存在&quot;);
+    }
+
+    private Set&lt;WebsocketServerEndpoint&gt; endpoints;
+}
+</code></pre>
+
+<hr />
+<h2 id="js">JS</h2>
+<pre><code>new WebSocket('ws://127.0.0.1:8080/message/id')
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../js/extra.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>

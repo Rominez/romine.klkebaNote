@@ -1,0 +1,18 @@
+server:
+  port: 8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8082/eureka/
+
+spring:
+  application:
+    name: test-client-1
+
+
+hz:
+  service: # 需要调用服务的地址
+    redis-initializer: http://127.0.0.1:8884/redisinitializer  # redis 初始化服务
+    websocket: http://127.0.0.1:8885/websocket
+

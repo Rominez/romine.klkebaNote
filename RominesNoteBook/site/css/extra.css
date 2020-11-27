@@ -1,0 +1,10 @@
+[role = main] a {
+    text-decoration: underline;
+    margin: 0 3px;
+}
+[role = main] h1 {
+    text-align: center;
+}
+[role = main] p {
+    font-family: 'Fira Code Retina','Consolas','Courier New';
+}

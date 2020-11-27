@@ -1,0 +1,27 @@
+site_name: Romines Note
+nav:
+  - Java Note: index.md
+  - Groovy: groovy.md
+  - JS Note: javascript.md
+  - nodejs: nodejs.md
+  - c: c.md
+  - Windows Command Line: dll.md
+  - Linux: linux.md
+  - nginx: nginx.md
+  - docker: docker.md
+  - rabbitmq: rabbitmq.md
+  - redis: redis.md
+  - record: record.md
+  - finance: finance.md
+  - vocabulary: vocabulary.md
+  - readme: read.md
+  - Database 2 Day DBA: d2dd.md
+  - oracle: oracle.md
+  - ipv6: ipv6.md
+theme:
+  name: readthedocs
+  custom_dir: custom_theme/
+extra_css: 
+  - css/extra.css
+extra_javascript:
+  - js/extra.js
