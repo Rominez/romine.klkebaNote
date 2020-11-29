@@ -19,8 +19,8 @@ $ rabbitmq-plugins enable rabbitmq_management
 
 ### exchange 消息交换机  
 消息第一个到达的地方  
-direct: 将消息直接发送到指定的Queue里
-topics: 将消息发送给根据topic匹配到的Queue里  
+direct exchange: 将消息直接发送到指定的Queue里  
+topics exchange: 将消息发送给根据topic匹配到的Queue里  
 
 
 ### spring-boot 整合  
